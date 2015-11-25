@@ -1,0 +1,27 @@
+{% load staticfiles bootstrap %}
+<!DOCTYPE html>
+<html lang="en" ng-app="dreamhack">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'sprancher/favicon.ico' %}">
+    <title>Dreamhack challenge - Sprancher</title>
+
+    <link href="{% static 'bootstrap-3.3.5-dist/css/bootstrap.min.css' %}" rel="stylesheet">
+  </head>
+  <body ng-controller="mainCtrl">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+          <h1>Your score: {{ form.time_ms.value }} ms</h1>
+          <form method="post" action="{% url 'register' %}">
+            {% csrf_token %}
+            {{ form|bootstrap }}
+            <button type="submit" class="btn btn-primary btn-lg">Register score</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

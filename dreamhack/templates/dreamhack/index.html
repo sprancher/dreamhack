@@ -1,0 +1,386 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en" ng-app="dreamhack">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'sprancher/favicon.ico' %}">
+    <title>Dreamhack challenge - Sprancher</title>
+
+    <link href="{% static 'bootstrap-3.3.5-dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'ng-tags-input/ng-tags-input.min.css' %}" rel="stylesheet">
+    <link href="{% static 'ng-tags-input/ng-tags-input.bootstrap.min.css' %}" rel="stylesheet">
+    <style type="text/css">
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0, 0.5);
+      z-index: 999;
+    }
+    #overlay > div {
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      -moz-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      padding-top: 20px;
+      padding-bottom: 20px;
+      position: absolute;
+      width: 100%;
+      background-color: white;
+      color: black;
+    }
+    .branding-image {
+      position: absolute;
+      top: 50%;
+      -webkit-transform: translate(0, -50%);
+      -moz-transform: translate(0, -50%);
+      -ms-transform: translate(0, -50%);
+      transform: translate(0, -50%);
+      left: 0;
+    }
+
+    .timer {
+      font-size: 40px;
+    }
+    [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+      display: none !important;
+    }
+    .btn-primary, .btn-primary:hover, .btn-primary:focus {
+      background-color: #ff6a68;
+      border: 1px solid #ff6a68;
+    }
+    body {
+      padding-top: 300px;
+      background-image: url('{% static 'darthvader1.jpg' %}');
+      background-size: 100%;
+      background-repeat: no-repeat;
+    }
+    .glyphicon-star {
+      color: #FFbb00;
+    }
+    ol li:not(:first-child) {
+      padding-left: 18px;
+    }
+    .img-responsive {
+      width: 100%;
+    }
+    </style>
+  </head>
+  <body ng-controller="mainCtrl">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-4 col-md-offset-1">
+          <h1>Sprancher's Dreamhack challenge</h1>
+          <form ng-submit="stop($event)">
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group" id="startElement">
+                  <label>Profession</label>
+                  <tags-input ng-model="form.professions" placeholder="Sith Lord" replace-spaces-with-dashes="false">
+                    <auto-complete source="loadProfessions($query)" min-length="1"></auto-complete>
+                  </tags-input>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label>Location</label>
+                  <tags-input ng-model="form.cities" placeholder="Death Star" replace-spaces-with-dashes="false">
+                    <auto-complete source="loadCities($query)" min-length="1"></auto-complete>
+                  </tags-input>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="first_name">First name</label>
+                  <input type="text" class="form-control" ng-model="form.first_name" id="first_name" placeholder="Darth">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="last_name">Last name</label>
+                  <input type="text" class="form-control" ng-model="form.last_name" id="last_name" placeholder="Vader">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="text" class="form-control" ng-model="form.email" id="email" placeholder="darth.vader@gmail.com">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <button type="submit" class="btn btn-primary btn-lg btn-block">Register (stop timer)</button>
+              </div>
+              <div class="col-sm-6 timer text-center">
+                <span ng-bind="time_ms() | number:2"></span> s
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="overlay" ng-show="stopped" class="ng-cloak">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-1">
+            <img class="img-responsive" src="{% static 'Sprancher.jpg' %}" />
+          </div>
+          <div class="col-md-9 col-md-offset-1">
+            <div ng-switch="page">
+
+              <div ng-switch-when="results" class="text-center">
+                <h1><span class="glyphicon glyphicon-star"></span> <span ng-bind="scorePlace()"></span> place <span class="glyphicon glyphicon-star"></span></h1>
+                <h2>Your score: <span ng-bind="time_ms() | number:2"></span></h2>
+                <form method="post" action="{% url 'register' %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="time_ms" />
+                  <div class="row">
+                    <div class="col-sm-6 col-sm-offset-3">
+                      <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Your name">
+                      </div>
+                      <div class="form-group">
+                        <label for="email">Phone</label>
+                        <input type="text" class="form-control" id="phone" name="phone" placeholder="Your phone">
+                      </div>
+                      <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="text" class="form-control" id="email" name="email" placeholder="Your email">
+                      </div>
+                      <button type="submit" class="btn btn-primary btn-lg btn-block">Register score</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <div ng-switch-when="errors">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h1>Mistakes were made</h1>
+                    <h3>
+                      <span class="label label-danger">
+                        You did not fill in the details correctly :(
+                      </span>
+                    </h3>
+                  </div>
+                  <div class="col-md-6">
+                    <h2>Times to beat:</h2>
+                    <ol>
+                      <li ng-repeat="score in top5">
+                        <span class="glyphicon glyphicon-star" ng-show="$first"></span>
+                        <b><span ng-bind="score.name"></span></b>
+                        <span ng-bind="score.score | number:2"></span> s
+                        <span class="glyphicon glyphicon-star" ng-show="$first"></span>
+                      </li>
+                    </ol>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <p>
+                      Press enter to continue
+                    </p>
+                    <form ng-submit="start($event)" class="text-center">
+                      <button type="submit" class="btn btn-primary btn-lg" id="tryAgainButton">Try again</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              <div ng-switch-when="notGoodEnough">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h1>You are not worthy of the dark side</h1>
+                    <h2>Your score: <span ng-bind="time_ms() | number:2"></span></h2>
+                    <h3>
+                      <span class="label label-warning">Too slow!!</span>
+                    </h3>
+                  </div>
+                  <div class="col-md-6">
+                    <h2>Times to beat:</h2>
+                    <ol>
+                      <li ng-repeat="score in top5">
+                        <span class="glyphicon glyphicon-star" ng-show="$first"></span>
+                        <b><span ng-bind="score.name"></span></b>
+                        <span ng-bind="score.score | number:2"></span> s
+                        <span class="glyphicon glyphicon-star" ng-show="$first"></span>
+                      </li>
+                    </ol>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <p>
+                      Press enter to continue
+                    </p>
+                    <form ng-submit="start($event)" class="text-center">
+                      <button type="submit" class="btn btn-primary btn-lg" id="tryAgainButton2">Try again</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              <div ng-switch-default>
+                <div class="row">
+                  <div class="col-md-6">
+                    <h1>Ready to beat the challenge?</h1>
+                    <p>Register yourself with following details:</p>
+                    <dl class="dl-horizontal">
+                      <dt>Profession</dt>
+                      <dd ng-bind="correctForm.professions[0].text"></dd>
+                      <dt>Location</dt>
+                      <dd ng-bind="correctForm.cities[0].text"></dd>
+                      <dt>First name</dt>
+                      <dd ng-bind="correctForm.first_name"></dd>
+                      <dt>Last name</dt>
+                      <dd ng-bind="correctForm.last_name"></dd>
+                      <dt>Email</dt>
+                      <dd ng-bind="correctForm.email"></dd>
+                    </dl>
+                  </div>
+                  <div class="col-md-6">
+                    <h2>Times to beat:</h2>
+                    <ol>
+                      <li ng-repeat="score in top5">
+                        <span class="glyphicon glyphicon-star" ng-show="$first"></span>
+                        <b><span ng-bind="score.name"></span></b>
+                        <span ng-bind="score.score | number:2"></span> s
+                        <span class="glyphicon glyphicon-star" ng-show="$first"></span>
+                      </li>
+                    </ol>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <p>
+                      Press enter to continue
+                    </p>
+                    <form ng-submit="start($event)" class="text-center">
+                      <button type="submit" class="btn btn-primary btn-lg" id="startButton">Start</button>
+                    </form>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="{% static 'jquery-2.1.4.min.js' %}"></script>
+    <script src="{% static 'bootstrap-3.3.5-dist/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'angular.js' %}"></script>
+    <script src="{% static 'ng-tags-input/ng-tags-input.min.js' %}"></script>
+    <script type="text/javascript">
+      angular.module('dreamhack', ['ngTagsInput'])
+      .controller('mainCtrl', function($scope, $interval, $q) {
+        $scope.startTime = 0;
+        $scope.endTime = 0;
+        $scope.stopped = true;
+        $scope.form = {};
+        $scope.correctForm = {
+          professions: [
+            {text: 'Sith Lord'},
+          ],
+          cities: [
+            {text: 'Death Star'},
+          ],
+          first_name: 'Darth',
+          last_name: 'Vader',
+          email: 'darth.vader@gmail.com',
+        };
+        $scope.page = '';
+        $scope.top5 = {{ top5|safe }};
+
+        $scope.interval = null;
+
+        $scope.start = function() {
+          $scope.form = {};
+
+          $scope.stopped = false;
+          $scope.startTime = new Date();
+          $scope.endTime = new Date();
+          $scope.interval = $interval(function() {
+            $scope.endTime = new Date();
+          }, 30);
+          $('#startElement input').focus();
+        };
+
+        $scope.stop = function($event) {
+          $scope.stopped = true;
+          if ($scope.interval !== null) {
+            $interval.cancel($scope.interval);
+          }
+
+          if (!angular.equals($scope.form, $scope.correctForm)) {
+            $scope.page = 'errors';
+            setTimeout(function() {
+              $('#tryAgainButton').focus();
+            });
+            return;
+          }
+
+          if ($scope.top5.length >= 5 && $scope.time_ms() > $scope.top5[$scope.top5.length-1].score) {
+            $scope.page = 'notGoodEnough';
+            setTimeout(function() {
+              $('#tryAgainButton2').focus();
+            });
+            return;
+          }
+
+          $scope.page = 'results';
+          setTimeout(function() {
+            $('input[name="time_ms"]').val($scope.endTime - $scope.startTime);
+            $('input[name="name"]').focus();
+          }, 10);
+        }
+        setTimeout(function() {
+          $('#startButton').focus();
+        });
+
+        $scope.time_ms = function() {
+          return ($scope.endTime - $scope.startTime) / 1000;
+        };
+
+        $scope.scorePlace = function() {
+          var suffix = ['st', 'nd'];
+          var i;
+          for(i = 0; i < $scope.top5.length; i++) {
+            if ($scope.time_ms() < $scope.top5[i].score) {
+              break;
+            }
+          }
+          return (i + 1) + (i > 1 ? 'rd' : suffix[i]);
+        };
+
+        $scope.loadProfessions = function(query) {
+          return $q(function(success, error) {
+            success([
+              {text: 'Sith Lord'},
+              {text: 'Jedi'},
+            ]);
+          });
+        };
+
+        $scope.loadCities = function(query) {
+          return $q(function(success, error) {
+            success([
+              {text: 'Death Star'},
+            ]);
+          });
+        };
+
+      });
+    </script>
+  </body>
+</html>
