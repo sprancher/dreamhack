@@ -1,4 +1,4 @@
-{% load staticfiles bootstrap %}
+{% load staticfiles bootstrap dreamhack %}
 <!DOCTYPE html>
 <html lang="en" ng-app="dreamhack">
   <head>
@@ -14,7 +14,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-6 col-sm-offset-3">
-          <h1>Your score: {{ form.time_ms.value }} ms</h1>
+          <h1>Your score: {{ form.time_ms.value | to_ms }} ms</h1>
           <form method="post" action="{% url 'register' %}">
             {% csrf_token %}
             {{ form|bootstrap }}
