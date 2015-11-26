@@ -14,7 +14,7 @@ class LoginRequiredMixin(object):
         return login_required(view)
 
 
-class IndexView(LoginRequiredMixin, TemplateView):
+class IndexView(TemplateView):
     template_name = 'dreamhack/index.html'
 
     def get_context_data(self, **kwargs):
@@ -25,7 +25,7 @@ class IndexView(LoginRequiredMixin, TemplateView):
         ], indent=2)
         return context
 
-class RegisterView(LoginRequiredMixin, CreateView):
+class RegisterView(CreateView):
     template_name = 'dreamhack/register.html'
     model = Score
     form_class = ScoreForm
