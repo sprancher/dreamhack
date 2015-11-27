@@ -83,10 +83,11 @@ angular.module('dreamhack', ['ngTagsInput'])
     return $q(function(success, error) {
       success([
         {text: 'Sith Lord'},
-        {text: 'Jedi'},
-        {text: 'Pilot'},
-        {text: 'Jedi Hunter'},
-        {text: 'Navigator'},
+        {text: 'Jedi Knight'},
+        {text: 'Padawan'},
+        {text: 'Bounty Hunter'},
+        {text: 'Storm Trooper'},
+        {text: 'Rebel Soldier'},
       ]);
     });
   };
