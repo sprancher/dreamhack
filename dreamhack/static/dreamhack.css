@@ -1,0 +1,74 @@
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0, 0.5);
+  z-index: 999;
+}
+#overlay > div {
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  padding-top: 20px;
+  padding-bottom: 20px;
+  position: absolute;
+  width: 100%;
+  background-color: white;
+  color: black;
+}
+.branding-image {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translate(0, -50%);
+  -moz-transform: translate(0, -50%);
+  -ms-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+  left: 0;
+}
+
+.timer {
+  font-size: 40px;
+}
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+.btn-primary, .btn-primary:hover, .btn-primary:focus {
+  background-color: #ff6a68;
+  border: 1px solid #ff6a68;
+}
+body {
+  padding-top: 100px;
+  background-image: url('{% static 'darthvader1.jpg' %}');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+html, body {
+  height: 100%;
+}
+li:first-child .glyphicon-star {
+  color: #FFd700;
+}
+li:nth-child(2) .glyphicon-star {
+  color: #aaa;
+}
+li:nth-child(3) .glyphicon-star {
+  color: #cd7f32;
+}
+li:nth-child(4) .glyphicon-star {
+  color: #fff;
+}
+li:nth-child(5) .glyphicon-star {
+  color: #fff;
+}
+.img-responsive {
+  width: 100%;
+}
+.panel-body > h2:first-child {
+  margin-top: 0;
+}
