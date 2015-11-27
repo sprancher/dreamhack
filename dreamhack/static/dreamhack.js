@@ -69,14 +69,14 @@ angular.module('dreamhack', ['ngTagsInput'])
   };
 
   $scope.scorePlace = function() {
-    var suffix = ['st', 'nd'];
+    var suffix = ['st', 'nd', 'rd'];
     var i;
     for(i = 0; i < $scope.top5.length; i++) {
       if ($scope.time_ms() < $scope.top5[i].score) {
         break;
       }
     }
-    return (i + 1) + (i > 1 ? 'rd' : suffix[i]);
+    return (i + 1) + (i > 2 ? 'th' : suffix[i]);
   };
 
   $scope.loadProfessions = function(query) {
