@@ -43,7 +43,7 @@
 }
 body {
   padding-top: 100px;
-  background-image: url('{% static 'darthvader1.jpg' %}');
+  background-image: url('darthvader1.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
