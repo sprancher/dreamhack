@@ -9,11 +9,12 @@
     <title>Dreamhack challenge - Sprancher</title>
 
     <link href="{% static 'bootstrap-3.3.5-dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'dreamhack.css' %}" rel="stylesheet">
   </head>
   <body ng-controller="mainCtrl">
     <div class="container">
       <div class="row">
-        <div class="col-sm-6 col-sm-offset-3">
+        <div class="col-sm-5">
           <h1>Your score: {{ form.time_ms.value | to_ms }} ms</h1>
           <form method="post" action="{% url 'register' %}">
             {% csrf_token %}
