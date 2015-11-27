@@ -84,6 +84,9 @@ angular.module('dreamhack', ['ngTagsInput'])
       success([
         {text: 'Sith Lord'},
         {text: 'Jedi'},
+        {text: 'Pilot'},
+        {text: 'Jedi Hunter'},
+        {text: 'Navigator'},
       ]);
     });
   };
@@ -92,6 +95,10 @@ angular.module('dreamhack', ['ngTagsInput'])
     return $q(function(success, error) {
       success([
         {text: 'Death Star'},
+        {text: 'Tatooine'},
+        {text: 'Mustafar'},
+        {text: 'Hoth'},
+        {text: 'Alderaan'},
       ]);
     });
   };
